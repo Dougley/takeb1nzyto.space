@@ -19,16 +19,6 @@ var useref = require('gulp-useref');
 var version = require('gulp-version-number');
 
 /*
- * Default task. Runs production environment task
- */
-gulp.task('default', ['compile:production', 'copy']);
-
-/*
- * Development task. Runs development environment task
- */
-gulp.task('dev', ['compile:dev', 'copy']);
-
-/*
  * Compile all HTML, CSS, and Javascript using useref
  */
 gulp.task('compile:dev', function () {
@@ -66,10 +56,18 @@ gulp.task('copy', function () {
 });
 
 /*
+ * Default task. Runs production environment task
+ */
+gulp.task('default', gulp.series('compile:production', 'copy'));
+
+/*
+ * Development task. Runs development environment task
+ */
+gulp.task('dev', gulp.series('compile:dev', 'copy'));
+
+/*
  * Watch for changes and execute specific tasks
  */
-gulp.task('watch', ['watch:compile', 'watch:copy']);
-
 gulp.task('watch:compile', function () {
   return gulp.watch(['**/*.html','assets/css/app.css', 'assets/js/*.*'], ['compile:dev']);
 });
@@ -77,3 +75,5 @@ gulp.task('watch:compile', function () {
 gulp.task('watch:copy', function () {
   return gulp.watch(['assets/img/*.*', 'assets/music/*.mp3'], ['copy']);
 });
+
+gulp.task('watch', gulp.series('watch:compile', 'watch:copy'));
